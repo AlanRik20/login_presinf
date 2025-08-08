@@ -1,0 +1,84 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f7fc; /* fondo muy claro, casi blanco con tintes azules */
+  color: #003049; /* azul muy oscuro para texto */
+}
+
+/* Forzar que el sidebar tenga siempre el mismo ancho */
+.col-md-3.col-lg-2 {
+  flex: 0 0 250px !important;
+  max-width: 250px !important;
+  width: 250px !important;
+  min-width: 250px !important;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #005f99; /* azul hospital más sobrio y profesional */
+  color: #e0f0ff; /* texto azul muy claro */
+  height: 100vh;
+  padding: 1rem;
+  box-shadow: 2px 0 8px rgba(0, 95, 153, 0.3); /* sombra con azul */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sidebar img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid #a7d0ff; /* borde azul muy claro */
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 1rem auto;
+  box-shadow: 0 0 8px #a7d0ff;
+}
+
+.sidebar h2, .sidebar span {
+  text-align: center;
+  margin: 0.5rem 0;
+  color: #d9f0ff; /* texto azul muy claro */
+  font-weight: 600;
+}
+
+.sidebar nav {
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.sidebar a {
+  display: block;
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  color: #e0f0ff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sidebar a:hover {
+  background-color: #3399ff; /* azul celeste más brillante */
+  box-shadow: 0 0 8px #3399ff;
+}
+
+.sidebar a.active {
+  background-color: #007acc; /* azul principal hospital */
+  box-shadow: 0 0 10px #007acc;
+}
+
+main {
+  flex-grow: 1;
+  padding: 2rem;
+  background-color: #ffffff; /* fondo blanco para contenido */
+  box-shadow: inset 0 0 10px #d1e8ff;
+  border-radius: 12px;
+  margin: 1rem;
+  color: #003049;
+}
+h1 {
+  color: #005f99; /* azul hospital */
+  margin-bottom: 1rem;
+}
