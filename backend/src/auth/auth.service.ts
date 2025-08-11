@@ -1,32 +1,50 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import { RegisterDto } from './dto/register.dto';
+
+import * as bycryptjs from 'bcryptjs';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
-    private jwtService: JwtService
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, pass: string) {
+  async register({ nombre, email, password, rol_id }: RegisterDto) {
     const user = await this.userService.findByEmail(email);
-    
-    if (user && user.password === pass) {
-      const { password, ...result } = user;
-      return result;
+
+    if (user) {
+      throw new BadRequestException('User already exists');
+    }
+    return await this.userService.create({
+      nombre,
+      email,
+      password: await bycryptjs.hash(password, 10),
+      rol_id,
+    });
+  }
+  async login({ email, password }: LoginDto) {
+    const user = await this.userService.findByEmail(email);
+    if (!user) {
+      throw new UnauthorizedException('el email no existe');
+    }
+    const isPasswordValid = await bycryptjs.compare(password, user.password);
+    if(!isPasswordValid){
+      throw new UnauthorizedException('contraseña errónea')
     }
 
-    throw new UnauthorizedException('Credenciales inválidas');
-  }
-
-  async login(email: string, pass: string) {
-    const user = await this.validateUser(email, pass);
-    const payload = { email: user.email, sub: user.id };
-
+    const payload = {email: user.email, role: user.rolId}
+    const token = await this.jwtService.signAsync(payload)
     return {
-      access_token: this.jwtService.sign(payload),
-      user, // 👈 devolvemos el usuario para que el front lo pueda mostrar
+      token,
+      user,
     };
   }
 }

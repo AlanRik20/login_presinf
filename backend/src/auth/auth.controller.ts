@@ -1,36 +1,46 @@
 // auth.controller.ts
-import { Controller, Post, Body, Res, Get, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Res,
+  Get,
+  Req,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt-auth.guard';
-import { Response, Request } from 'express';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
+import { Response } from 'express';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
+
+  @Post('register')
+  register(
+    @Body()
+    registerDto:RegisterDto,
+  ){
+    console.log(registerDto);
+    return this.authService.register(registerDto)
+  }
 
   @Post('login')
-async login(
-  @Body() body: any,
-  @Res({ passthrough: true }) res: Response
-) {
-  const { email, password } = body;
-  const { access_token, user } = await this.authService.login(email, password);
-
-  res.cookie('token', access_token, {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: false, // true en producción con HTTPS
-    maxAge: 1000 * 60 * 60 * 24, // 1 día
-  });
-
-  return { user };
-}
-
-  @Get('verify')
+  login(
+    @Body()
+    loginDto:LoginDto
+  ){
+    return this.authService.login(loginDto)
+  }
+ @Get('verify')
   @UseGuards(JwtAuthGuard)
-  async verify(@Req() req: Request) {
+  verify(@Req() req) {
     return req.user; // Esto lo devuelve JwtStrategy.validate()
   }
+  
 
   @Post('logout')
   async logout(@Res({ passthrough: true }) res: Response) {

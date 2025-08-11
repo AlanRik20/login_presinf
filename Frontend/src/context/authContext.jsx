@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
             const res = await loginRequest(user);
 
             // Guardar el token en cookies
-            Cookies.set('token', res.data.access_token, { expires: 1 }); // 1 día
+            Cookies.set('token', res.data.token, { expires: 1 }); // 1 día
 
             // Guardar el usuario 
             setUser(res.data.user || null);
